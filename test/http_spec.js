@@ -51,14 +51,16 @@ var mockResponse = {
 describe('backbone-db-http tests', function () {
 
   before(function() {
-    this.db = new Db('game');
+    this.db = new Db('game', {
+      base_url: 'http://api.everyplay.com'
+    });
     // mock server response
     this.db.request = function() {
       return when.resolve(mockResponse);
     };
     this.Model = Model.extend({
       url: function() {
-        var base = 'http://api.everyplay.com/games/';
+        var base = '/games/';
         return base + (this.id ? this.id : '');
       },
       db: this.db,

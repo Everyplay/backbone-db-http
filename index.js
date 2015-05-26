@@ -25,7 +25,6 @@ var _request = function(opts) {
     };
     request(requestOptions, handleResponse);
   });
-
 };
 
 function HttpDb(name, options) {
@@ -37,9 +36,16 @@ function HttpDb(name, options) {
 HttpDb.sync = BackboneDb.sync;
 
 _.extend(HttpDb.prototype, BackboneDb.prototype, {
+  createUrl: function(model) {
+    var base = '';
+    if (this.options.base_url) {
+      base = this.options.base_url;
+    }
+    return base + model.url();
+  },
   find: function(model, options, cb) {
     var requestOptions = {
-      url: model.url()
+      url: this.createUrl(model)
     };
     debug('find model: %o (%o)', model.toJSON(), requestOptions);
     this.request(requestOptions)
