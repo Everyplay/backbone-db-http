@@ -54,6 +54,12 @@ _.extend(HttpDb.prototype, BackboneDb.prototype, {
       }, function(err) {
         cb(err);
       });
+  },
+  findAll: function(collection, options, cb) {
+    if (!collection.model) {
+      return this.find(collection, options, cb);
+    }
+    cb(new Error('findAll for collection is not implemented'));
   }
 });
 
