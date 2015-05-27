@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var BackboneDb = require('backbone-db');
+var errors = BackboneDb.errors;
 var debug = require('debug')('backbone-db-http');
 var request = require('request');
 var when = require('when');
@@ -21,7 +22,13 @@ var _request = function(opts) {
       if (err || !response) {
         return reject(err || new Error('no response'));
       }
-      return resolve(response.body);
+      var body = response.body;
+      if (body.error) {
+        return reject(new errors.BaseError(body.error, {
+          statusCode: body.status
+        }));
+      }
+      return resolve(body);
     };
     request(requestOptions, handleResponse);
   });
